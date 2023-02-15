@@ -5,7 +5,13 @@ import css from './Modal.module.css';
 
 const modalRoot = document.getElementById('modal-root');
 
-const Modal = ({ onClose, children }) => {
+export default function Modal({ onClose, children }) {
+  const handleBackdropClick = event => {
+    if (event.currentTarget === event.target) {
+      onClose();
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = e => {
       if (e.code === 'Escape') {
@@ -20,22 +26,14 @@ const Modal = ({ onClose, children }) => {
     };
   }, [onClose]);
 
-  const handleBackdropClick = e => {
-    if (e.currentTarget === e.target) {
-      onClose();
-    }
-  };
-
   return createPortal(
     <div className={css.overlay} onClick={handleBackdropClick}>
       <div className={css.modal}>{children}</div>
     </div>,
     modalRoot
   );
-};
+}
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
-
-export default Modal;
